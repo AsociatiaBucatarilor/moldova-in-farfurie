@@ -1,5 +1,4 @@
 import type { Metadata } from 'next'
-import { Allura, Cormorant_Garamond, Marcellus, Source_Sans_3 } from 'next/font/google'
 import { NextIntlClientProvider } from 'next-intl'
 import { getMessages, setRequestLocale } from 'next-intl/server'
 import { notFound } from 'next/navigation'
@@ -8,29 +7,17 @@ import React from 'react'
 import { routing } from '@/i18n/routing'
 import { getServerUrl } from '@/utilities/serverUrl'
 
-import './globals.css'
+// Fonts are self-hosted from @fontsource: next/font/google fetches from Google at build time,
+// which made Vercel builds fail intermittently
+import '@fontsource/allura/400.css'
+import '@fontsource/cormorant-garamond/500.css'
+import '@fontsource/cormorant-garamond/500-italic.css'
+import '@fontsource/cormorant-garamond/600.css'
+import '@fontsource/marcellus/400.css'
+import '@fontsource/source-sans-3/400.css'
+import '@fontsource/source-sans-3/600.css'
 
-const marcellus = Marcellus({
-  subsets: ['latin', 'latin-ext'],
-  weight: '400',
-  variable: '--font-marcellus',
-})
-const cormorant = Cormorant_Garamond({
-  subsets: ['latin', 'latin-ext', 'cyrillic'],
-  weight: ['500', '600'],
-  style: ['normal', 'italic'],
-  variable: '--font-cormorant',
-})
-const allura = Allura({
-  subsets: ['latin', 'latin-ext'],
-  weight: '400',
-  variable: '--font-allura',
-})
-const sourceSans = Source_Sans_3({
-  subsets: ['latin', 'latin-ext', 'cyrillic'],
-  weight: ['400', '600'],
-  variable: '--font-sans',
-})
+import './globals.css'
 
 type Args = {
   children: React.ReactNode
@@ -48,10 +35,7 @@ export default async function RootLayout({ children, params }: Args) {
   const messages = await getMessages()
 
   return (
-    <html
-      className={[marcellus.variable, cormorant.variable, allura.variable, sourceSans.variable].join(' ')}
-      lang={locale}
-    >
+    <html lang={locale}>
       <head>
         <link href="/favicon.ico" rel="icon" sizes="32x32" />
         <link href="/favicon.svg" rel="icon" type="image/svg+xml" />

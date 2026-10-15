@@ -11,10 +11,10 @@
   --accent: #8a4a37;
   --gutter: 4.6%;
 
-  --f-display: var(--font-marcellus), var(--font-cormorant), Georgia, serif;
-  --f-serif: var(--font-cormorant), Georgia, serif;
-  --f-script: var(--font-allura), var(--font-cormorant), cursive;
-  --f-sans: var(--font-sans), system-ui, sans-serif;
+  --f-display: 'Marcellus', 'Cormorant Garamond', Georgia, serif;
+  --f-serif: 'Cormorant Garamond', Georgia, serif;
+  --f-script: 'Allura', 'Cormorant Garamond', cursive;
+  --f-sans: 'Source Sans 3', system-ui, sans-serif;
 }
 
 *,
