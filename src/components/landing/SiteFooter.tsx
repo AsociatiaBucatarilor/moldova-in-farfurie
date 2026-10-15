@@ -3,11 +3,24 @@ import React from 'react'
 
 import type { Landing } from '@/payload-types'
 
-import { FacebookIcon, InstagramIcon, TikTokIcon, YouTubeIcon } from './icons'
+import {
+  FacebookIcon,
+  InstagramIcon,
+  MailIcon,
+  PhoneIcon,
+  PinIcon,
+  TikTokIcon,
+  YouTubeIcon,
+} from './icons'
 import { NAV_LINKS } from './SiteHeader'
 
 export const SiteFooter: React.FC<{ footer: Landing['footer'] }> = ({ footer }) => {
   const t = useTranslations('nav')
+  const tContacts = useTranslations('contacts')
+  const phone = footer?.phone?.trim()
+  const email = footer?.email?.trim()
+  const address = footer?.address?.trim()
+  const hasContacts = Boolean(phone || email || address)
 
   const socials = [
     { title: 'Instagram', href: footer?.instagram, Icon: InstagramIcon },
@@ -17,7 +30,7 @@ export const SiteFooter: React.FC<{ footer: Landing['footer'] }> = ({ footer }) 
   ].filter((s) => s.href)
 
   return (
-    <footer className="site-footer">
+    <footer id="contacte" className="site-footer">
       <div className="site-footer__main">
         <a href="#top" className="brand">
           {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -35,6 +48,32 @@ export const SiteFooter: React.FC<{ footer: Landing['footer'] }> = ({ footer }) 
             </a>
           ))}
         </nav>
+        {hasContacts && (
+          <address className="site-footer__contacts">
+            <div className="site-footer__heading">{tContacts('title')}</div>
+            {phone && (
+              <a href={`tel:${phone.replace(/[^\d+]/g, '')}`} className="contact-line">
+                <PhoneIcon />
+                <span className="sr-only">{tContacts('phone')}: </span>
+                {phone}
+              </a>
+            )}
+            {email && (
+              <a href={`mailto:${email}`} className="contact-line">
+                <MailIcon />
+                <span className="sr-only">{tContacts('email')}: </span>
+                {email}
+              </a>
+            )}
+            {address && (
+              <div className="contact-line">
+                <PinIcon />
+                <span className="sr-only">{tContacts('address')}: </span>
+                <span>{address}</span>
+              </div>
+            )}
+          </address>
+        )}
         <div className="site-footer__social">
           {socials.length > 0 && (
             <div className="site-footer__icons">

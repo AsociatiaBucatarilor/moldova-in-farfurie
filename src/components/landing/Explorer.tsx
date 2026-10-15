@@ -2,7 +2,7 @@
 
 import { useLocale, useTranslations } from 'next-intl'
 import Image from 'next/image'
-import React, { useMemo, useState } from 'react'
+import React, { useEffect, useMemo, useRef, useState } from 'react'
 
 import type { Landing } from '@/payload-types'
 
@@ -14,11 +14,30 @@ import { REGION_COLORS, REGION_ORDER, type PhotoView, type RaionView, type Regio
 
 type Filter = Region | 'all'
 
+const ALL_REGIONS_DOT = `conic-gradient(${REGION_ORDER.map((r, i) => `${REGION_COLORS[r].fill} ${(i * 100) / 3}% ${((i + 1) * 100) / 3}%`).join(', ')})`
+
 type Props = {
   raioane: RaionView[]
   map: Landing['map']
   districts: Landing['districts']
   featuredId: number | null
+}
+
+// How many district cards are shown before "show all", per breakpoint
+const PREVIEW_DESKTOP = 8
+const PREVIEW_MOBILE = 4
+const MOBILE_QUERY = '(max-width: 720px)'
+
+const usePreviewCount = () => {
+  const [count, setCount] = useState(PREVIEW_DESKTOP)
+  useEffect(() => {
+    const query = window.matchMedia(MOBILE_QUERY)
+    const update = () => setCount(query.matches ? PREVIEW_MOBILE : PREVIEW_DESKTOP)
+    update()
+    query.addEventListener('change', update)
+    return () => query.removeEventListener('change', update)
+  }, [])
+  return count
 }
 
 // Map, side panel and district grid share the region filter, so they live in one client island.
@@ -27,7 +46,11 @@ export const Explorer: React.FC<Props> = ({ raioane, map, districts, featuredId 
   const t = useTranslations()
   const { openRaion } = useModal()
   const [filter, setFilter] = useState<Filter>('all')
-  const [selectedId, setSelectedId] = useState<number | null>(featuredId ?? raioane[0]?.id ?? null)
+  const [selectedId, setSelectedId] = useState<number | null>(featuredId)
+  const [hoveredMapId, setHoveredMapId] = useState<string | null>(null)
+  const [expanded, setExpanded] = useState(false)
+  const previewCount = usePreviewCount()
+  const gridRef = useRef<HTMLElement>(null)
 
   const sorted = useMemo(
     () =>
@@ -38,12 +61,27 @@ export const Explorer: React.FC<Props> = ({ raioane, map, districts, featuredId 
       ),
     [raioane, locale],
   )
-  const visible = filter === 'all' ? sorted : sorted.filter((r) => r.region === filter)
-  const selected = raioane.find((r) => r.id === selectedId)
+  const filtered = filter === 'all' ? sorted : sorted.filter((r) => r.region === filter)
+  const visible = expanded ? filtered : filtered.slice(0, previewCount)
+  const hasMore = filtered.length > previewCount
+
+  // The panel previews whatever is under the cursor, falling back to the last clicked district
+  const hovered = hoveredMapId ? raioane.find((r) => r.mapId === hoveredMapId) : undefined
+  const panelRaion = hovered ?? raioane.find((r) => r.id === selectedId)
 
   const pick = (raion: RaionView) => {
     setSelectedId(raion.id)
     openRaion(raion.id)
+  }
+
+  const changeFilter = (next: Filter) => {
+    setFilter(next)
+    setExpanded(false)
+  }
+
+  const collapse = () => {
+    setExpanded(false)
+    gridRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' })
   }
 
   return (
@@ -59,23 +97,35 @@ export const Explorer: React.FC<Props> = ({ raioane, map, districts, featuredId 
             {map?.description && <p className="harta__lead">{map.description}</p>}
 
             <div className="legend">
-              {REGION_ORDER.map((region) => (
+              {(['all', ...REGION_ORDER] as Filter[]).map((key) => (
                 <button
-                  key={region}
+                  key={key}
                   type="button"
                   className="legend__item"
-                  aria-pressed={filter === region}
-                  onClick={() => setFilter(filter === region ? 'all' : region)}
+                  aria-pressed={filter === key}
+                  onClick={() => changeFilter(key)}
                 >
-                  <span className="legend__dot" style={{ background: REGION_COLORS[region].fill }} />
-                  {t(`regions.${region}`)}
+                  <span
+                    className="legend__dot"
+                    style={{
+                      background: key === 'all' ? ALL_REGIONS_DOT : REGION_COLORS[key].fill,
+                    }}
+                  />
+                  {key === 'all' ? t('map.allRegions') : t(`regions.${key}`)}
                 </button>
               ))}
             </div>
           </div>
 
           <div className="harta__map">
-            <MoldovaMap raioane={raioane} filter={filter} selectedId={selectedId} onPick={pick} />
+            <MoldovaMap
+              raioane={raioane}
+              filter={filter}
+              selectedId={selectedId}
+              hoveredId={hoveredMapId}
+              onHover={setHoveredMapId}
+              onPick={pick}
+            />
             {map?.script && (
               <div className="harta__script" aria-hidden="true">
                 {map.script.split('\n').map((line, i) => (
@@ -87,11 +137,23 @@ export const Explorer: React.FC<Props> = ({ raioane, map, districts, featuredId 
             )}
           </div>
 
-          {selected && <RaionPanel raion={selected} onOpen={() => openRaion(selected.id)} />}
+          {panelRaion ? (
+            <RaionPanel raion={panelRaion} onOpen={() => pick(panelRaion)} />
+          ) : (
+            <aside className="panel panel--empty">
+              <div className="panel__empty-art" aria-hidden="true">
+                {REGION_ORDER.map((region) => (
+                  <span key={region} style={{ background: REGION_COLORS[region].fill }} />
+                ))}
+              </div>
+              <h3 className="panel__title">{t('map.pickTitle')}</h3>
+              <p className="panel__text">{t('map.pickText')}</p>
+            </aside>
+          )}
         </div>
       </section>
 
-      <section id="raioane" className="raioane">
+      <section id="raioane" className="raioane" ref={gridRef}>
         {(districts?.eyebrow || districts?.title) && (
           <div className="raioane__head">
             {districts.eyebrow && <div className="eyebrow">{districts.eyebrow}</div>}
@@ -108,7 +170,7 @@ export const Explorer: React.FC<Props> = ({ raioane, map, districts, featuredId 
                 type="button"
                 className="tabs__item"
                 aria-pressed={filter === key}
-                onClick={() => setFilter(key)}
+                onClick={() => changeFilter(key)}
               >
                 {key !== 'all' && (
                   <span className="tabs__dot" style={{ background: REGION_COLORS[key].fill }} />
@@ -118,7 +180,7 @@ export const Explorer: React.FC<Props> = ({ raioane, map, districts, featuredId 
             ))}
           </div>
           <div className="raioane__count" aria-live="polite">
-            {t('grid.count', { count: visible.length })}
+            {t('grid.count', { count: filtered.length })}
           </div>
         </div>
 
@@ -129,6 +191,20 @@ export const Explorer: React.FC<Props> = ({ raioane, map, districts, featuredId 
             </li>
           ))}
         </ul>
+
+        {hasMore && (
+          <div className="raioane__more">
+            {expanded ? (
+              <button type="button" className="btn btn--outline-dark" onClick={collapse}>
+                {t('grid.showLess')}
+              </button>
+            ) : (
+              <button type="button" className="btn btn--dark" onClick={() => setExpanded(true)}>
+                {t('grid.showAll', { count: filtered.length })}
+              </button>
+            )}
+          </div>
+        )}
       </section>
     </>
   )

@@ -9,6 +9,7 @@ export const NAV_LINKS = [
   { key: 'map', href: '#harta' },
   { key: 'districts', href: '#raioane' },
   { key: 'partners', href: '#parteneri' },
+  { key: 'contacts', href: '#contacte' },
 ] as const
 
 export const SiteHeader: React.FC = () => {

@@ -230,6 +230,25 @@ img {
   opacity: 0.9;
 }
 
+.btn--outline-dark {
+  border-color: var(--ink);
+  color: var(--ink);
+  background: transparent;
+}
+
+.btn--outline-dark:hover {
+  background: rgba(43, 38, 32, 0.06);
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
+
 /* ---------- Header ---------- */
 
 .site-header {
@@ -695,6 +714,29 @@ img {
   object-fit: cover;
 }
 
+.panel--empty {
+  align-items: flex-start;
+  gap: 14px;
+  padding: clamp(22px, 2.4vw, 34px);
+  min-height: 260px;
+  justify-content: center;
+}
+
+.panel__empty-art {
+  display: flex;
+}
+
+.panel__empty-art span {
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  border: 3px solid var(--cream-2);
+}
+
+.panel__empty-art span + span {
+  margin-left: -10px;
+}
+
 /* ---------- Raioane grid (from Raioane.html) ---------- */
 
 .raioane {
@@ -860,6 +902,12 @@ img {
   background: var(--accent);
 }
 
+.raioane__more {
+  display: flex;
+  justify-content: center;
+  margin-top: clamp(24px, 3vw, 40px);
+}
+
 /* ---------- Quote ---------- */
 
 .quote {
@@ -930,10 +978,43 @@ img {
 .site-footer__main {
   padding: clamp(22px, 2.4vw, 34px) 0;
   display: grid;
-  grid-template-columns: auto 1fr auto;
+  grid-template-columns: auto 1fr auto auto;
   align-items: center;
-  gap: 24px;
+  gap: 24px clamp(24px, 3vw, 48px);
   border-top: 1px solid #e3ddd1;
+}
+
+.site-footer__contacts {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  font-style: normal;
+  font-size: clamp(13px, 1vw, 14px);
+}
+
+.site-footer__heading {
+  font-family: var(--f-display);
+  font-size: 12px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.contact-line {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  white-space: pre-line;
+}
+
+.contact-line svg {
+  flex: none;
+  margin-top: 1px;
+  color: var(--muted);
+}
+
+a.contact-line:hover {
+  color: var(--accent);
 }
 
 .site-footer__links {
@@ -1202,6 +1283,15 @@ img {
     display: none;
   }
 
+  .site-footer__main {
+    grid-template-columns: auto 1fr auto;
+  }
+
+  .site-footer__links {
+    grid-column: 1 / -1;
+    grid-row: 2;
+  }
+
   .raioane__grid {
     grid-template-columns: repeat(3, minmax(0, 1fr));
   }
@@ -1319,7 +1409,47 @@ img {
 
   .raioane__grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 10px;
+  }
+
+  .card {
+    padding: 6px 6px 10px;
+    gap: 8px;
+    border-radius: 10px;
+  }
+
+  .card__media {
+    aspect-ratio: 1 / 1;
+    border-radius: 6px;
+  }
+
+  .card__title {
+    font-size: 17px;
+  }
+
+  .card__foot {
+    padding: 0 2px;
+  }
+
+  .round-btn {
+    width: 28px;
+    height: 28px;
+    font-size: 13px;
+  }
+
+  .pill {
+    left: 6px;
+    top: 6px;
+    padding: 3px 8px;
+    font-size: 9px;
+  }
+
+  .raioane__toolbar {
     gap: 12px;
+  }
+
+  .site-footer__contacts {
+    align-items: center;
   }
 
   .tabs__item {
@@ -1336,6 +1466,10 @@ img {
     grid-template-columns: minmax(0, 1fr);
     justify-items: center;
     text-align: center;
+  }
+
+  .site-footer__links {
+    grid-row: auto;
   }
 
   .site-footer__social {
@@ -1361,10 +1495,6 @@ img {
 }
 
 @media (max-width: 420px) {
-  .raioane__grid {
-    grid-template-columns: minmax(0, 1fr);
-  }
-
   .brand__name {
     font-size: 13px;
   }

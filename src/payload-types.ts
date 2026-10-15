@@ -579,6 +579,9 @@ export interface Landing {
       | null;
   };
   footer?: {
+    phone?: string | null;
+    email?: string | null;
+    address?: string | null;
     instagram?: string | null;
     facebook?: string | null;
     youtube?: string | null;
@@ -650,6 +653,9 @@ export interface LandingSelect<T extends boolean = true> {
   footer?:
     | T
     | {
+        phone?: T;
+        email?: T;
+        address?: T;
         instagram?: T;
         facebook?: T;
         youtube?: T;

@@ -1,5 +1,6 @@
 import * as migration_20261015_093257_initial from './20261015_093257_initial';
 import * as migration_20261015_093644_media_prefix from './20261015_093644_media_prefix';
+import * as migration_20261015_102417_footer_contacts from './20261015_102417_footer_contacts';
 
 export const migrations = [
   {
@@ -10,6 +11,11 @@ export const migrations = [
   {
     up: migration_20261015_093644_media_prefix.up,
     down: migration_20261015_093644_media_prefix.down,
-    name: '20261015_093644_media_prefix'
+    name: '20261015_093644_media_prefix',
+  },
+  {
+    up: migration_20261015_102417_footer_contacts.up,
+    down: migration_20261015_102417_footer_contacts.down,
+    name: '20261015_102417_footer_contacts'
   },
 ];

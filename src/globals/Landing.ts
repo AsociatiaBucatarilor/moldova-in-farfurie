@@ -151,6 +151,24 @@ export const Landing: GlobalConfig = {
           label: 'Footer',
           fields: [
             {
+              type: 'collapsible',
+              label: 'Contacte',
+              admin: {
+                description:
+                  'Apar în footer, la secțiunea „Contacte” (linkul „Contacte” din meniu duce aici). Câmpurile goale nu se afișează.',
+              },
+              fields: [
+                {
+                  type: 'row',
+                  fields: [
+                    { name: 'phone', label: 'Telefon', type: 'text' },
+                    { name: 'email', label: 'Email', type: 'email' },
+                  ],
+                },
+                { name: 'address', label: 'Adresă', type: 'textarea', localized: true },
+              ],
+            },
+            {
               type: 'row',
               fields: [
                 { name: 'instagram', type: 'text' },

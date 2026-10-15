@@ -6,7 +6,8 @@
     "districts": "Raioane",
     "partners": "Parteneri",
     "watch": "Urmărește proiectul",
-    "language": "Limba"
+    "language": "Limba",
+    "contacts": "Contacte"
   },
   "hero": {
     "trailer": "Vezi trailerul",
@@ -22,12 +23,17 @@
     "raion": "Raionul {name}",
     "watch": "Vezi episodul",
     "sights": "Obiective turistice",
-    "dishes": "Gastronomie locală"
+    "dishes": "Gastronomie locală",
+    "allRegions": "Toate zonele",
+    "pickTitle": "Alege un raion",
+    "pickText": "Treci cu mouse-ul peste hartă pentru a vedea raionul, apoi apasă pe el ca să deschizi episodul și teaserul."
   },
   "grid": {
     "all": "Toate",
     "count": "{count, plural, one {# raion} few {# raioane} other {# de raioane}}",
-    "open": "Vezi episodul despre {name}"
+    "open": "Vezi episodul despre {name}",
+    "showAll": "Vezi toate raioanele ({count})",
+    "showLess": "Arată mai puține"
   },
   "modal": {
     "episode": "Episodul",
@@ -43,5 +49,11 @@
     "close": "Închide"
   },
   "page-not-found": "Pagina nu a fost găsită.",
-  "go-home": "Înapoi acasă"
+  "go-home": "Înapoi acasă",
+  "contacts": {
+    "title": "Contacte",
+    "phone": "Telefon",
+    "email": "Email",
+    "address": "Adresă"
+  }
 }

@@ -6,7 +6,8 @@
     "districts": "Districts",
     "partners": "Partners",
     "watch": "Watch the project",
-    "language": "Language"
+    "language": "Language",
+    "contacts": "Contacts"
   },
   "hero": {
     "trailer": "Watch the trailer",
@@ -22,12 +23,17 @@
     "raion": "{name} District",
     "watch": "Watch the episode",
     "sights": "Places to visit",
-    "dishes": "Local gastronomy"
+    "dishes": "Local gastronomy",
+    "allRegions": "All regions",
+    "pickTitle": "Pick a district",
+    "pickText": "Hover over the map to preview a district, then click it to open its episode and teaser."
   },
   "grid": {
     "all": "All",
     "count": "{count, plural, one {# district} other {# districts}}",
-    "open": "Watch the episode about {name}"
+    "open": "Watch the episode about {name}",
+    "showAll": "Show all districts ({count})",
+    "showLess": "Show fewer"
   },
   "modal": {
     "episode": "Episode",
@@ -43,5 +49,11 @@
     "close": "Close"
   },
   "page-not-found": "This page could not be found.",
-  "go-home": "Go home"
+  "go-home": "Go home",
+  "contacts": {
+    "title": "Contacts",
+    "phone": "Phone",
+    "email": "Email",
+    "address": "Address"
+  }
 }

@@ -1,7 +1,7 @@
 'use client'
 
 import { useTranslations } from 'next-intl'
-import React, { useMemo, useState } from 'react'
+import React, { useMemo } from 'react'
 
 import { MAP_HEIGHT, MAP_SHAPES, MAP_WIDTH } from './mapShapes'
 import { REGION_COLORS, type RaionView, type Region } from './types'
@@ -10,12 +10,20 @@ type Props = {
   raioane: RaionView[]
   filter: Region | 'all'
   selectedId: number | null
+  hoveredId: string | null
+  onHover: (mapId: string | null) => void
   onPick: (raion: RaionView) => void
 }
 
-export const MoldovaMap: React.FC<Props> = ({ raioane, filter, selectedId, onPick }) => {
+export const MoldovaMap: React.FC<Props> = ({
+  raioane,
+  filter,
+  selectedId,
+  hoveredId,
+  onHover: setHoveredId,
+  onPick,
+}) => {
   const t = useTranslations('map')
-  const [hoveredId, setHoveredId] = useState<string | null>(null)
 
   const byMapId = useMemo(() => new Map(raioane.map((r) => [r.mapId, r])), [raioane])
   const hovered = hoveredId ? MAP_SHAPES.find((s) => s.id === hoveredId) : undefined

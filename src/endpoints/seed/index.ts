@@ -52,7 +52,6 @@ export const seed = async ({ payload, req }: Args): Promise<void> => {
   }
 
   payload.logger.info(`Seeding: ${RAIOANE.length} raioane…`)
-  const raionIds = new Map<string, number>()
   for (const raion of RAIOANE) {
     const intro = raionIntro(raion.name)
     const food = raionFood(raion.name)
@@ -80,7 +79,6 @@ export const seed = async ({ payload, req }: Args): Promise<void> => {
         ),
       },
     })
-    raionIds.set(raion.mapId, doc.id)
 
     for (const locale of TRANSLATIONS) {
       await payload.update({
@@ -144,7 +142,8 @@ export const seed = async ({ payload, req }: Args): Promise<void> => {
         trailerUrl: '',
         stats: LANDING.hero.stats.map((s) => ({ value: s.value, label: s.label.ro })),
       },
-      map: { ...ro.map, featured: raionIds.get('orhei') },
+      // No district is preselected: the panel invites visitors to pick one
+      map: { ...ro.map, featured: null },
       partners: {
         items: await Promise.all(
           LANDING.partners.map(async (p) => ({
