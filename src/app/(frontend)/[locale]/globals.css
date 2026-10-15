@@ -679,6 +679,8 @@ img {
 .panel__text {
   font-size: clamp(13px, 1.05vw, 15px);
   line-height: 1.4;
+  /* Reserve three lines so shorter descriptions don't change the panel height */
+  min-height: 4.2em;
 }
 
 .panel__subtitle {
@@ -702,6 +704,11 @@ img {
   gap: 5px;
 }
 
+/* Labels can wrap to two lines; reserving both keeps every district's panel the same height */
+.panel__photos li > span {
+  min-height: 2.4em;
+}
+
 .panel__photo {
   position: relative;
   aspect-ratio: 74 / 52;
@@ -714,12 +721,12 @@ img {
   object-fit: cover;
 }
 
-.panel--empty {
-  align-items: flex-start;
-  gap: 14px;
-  padding: clamp(22px, 2.4vw, 34px);
-  min-height: 260px;
-  justify-content: center;
+.panel__media--empty {
+  display: grid;
+  place-items: center;
+  background:
+    radial-gradient(circle at 30% 30%, rgba(255, 255, 255, 0.5), transparent 60%),
+    #ddd5c6;
 }
 
 .panel__empty-art {
@@ -727,14 +734,23 @@ img {
 }
 
 .panel__empty-art span {
-  width: 34px;
-  height: 34px;
+  width: 44px;
+  height: 44px;
   border-radius: 50%;
-  border: 3px solid var(--cream-2);
+  border: 3px solid #ddd5c6;
 }
 
 .panel__empty-art span + span {
-  margin-left: -10px;
+  margin-left: -12px;
+}
+
+.panel__photo--empty {
+  background: repeating-linear-gradient(-45deg, #e2dacb 0 8px, #ddd4c4 8px 16px);
+}
+
+.panel__photo-soon {
+  color: var(--muted);
+  font-style: italic;
 }
 
 /* ---------- Raioane grid (from Raioane.html) ---------- */

@@ -27,6 +27,7 @@ type Props = {
 const PREVIEW_DESKTOP = 8
 const PREVIEW_MOBILE = 4
 const MOBILE_QUERY = '(max-width: 720px)'
+const PANEL_HOVER_DELAY = 150
 
 const usePreviewCount = () => {
   const [count, setCount] = useState(PREVIEW_DESKTOP)
@@ -48,6 +49,13 @@ export const Explorer: React.FC<Props> = ({ raioane, map, districts, featuredId 
   const [filter, setFilter] = useState<Filter>('all')
   const [selectedId, setSelectedId] = useState<number | null>(featuredId)
   const [hoveredMapId, setHoveredMapId] = useState<string | null>(null)
+  // The panel follows the hovered district with a short delay, so sweeping the cursor across
+  // the map doesn't swap its photos on every district it passes
+  const [panelMapId, setPanelMapId] = useState<string | null>(null)
+  useEffect(() => {
+    const timer = setTimeout(() => setPanelMapId(hoveredMapId), PANEL_HOVER_DELAY)
+    return () => clearTimeout(timer)
+  }, [hoveredMapId])
   const [expanded, setExpanded] = useState(false)
   const previewCount = usePreviewCount()
   const gridRef = useRef<HTMLElement>(null)
@@ -66,7 +74,7 @@ export const Explorer: React.FC<Props> = ({ raioane, map, districts, featuredId 
   const hasMore = filtered.length > previewCount
 
   // The panel previews whatever is under the cursor, falling back to the last clicked district
-  const hovered = hoveredMapId ? raioane.find((r) => r.mapId === hoveredMapId) : undefined
+  const hovered = panelMapId ? raioane.find((r) => r.mapId === panelMapId) : undefined
   const panelRaion = hovered ?? raioane.find((r) => r.id === selectedId)
 
   const pick = (raion: RaionView) => {
@@ -137,19 +145,7 @@ export const Explorer: React.FC<Props> = ({ raioane, map, districts, featuredId 
             )}
           </div>
 
-          {panelRaion ? (
-            <RaionPanel raion={panelRaion} onOpen={() => pick(panelRaion)} />
-          ) : (
-            <aside className="panel panel--empty">
-              <div className="panel__empty-art" aria-hidden="true">
-                {REGION_ORDER.map((region) => (
-                  <span key={region} style={{ background: REGION_COLORS[region].fill }} />
-                ))}
-              </div>
-              <h3 className="panel__title">{t('map.pickTitle')}</h3>
-              <p className="panel__text">{t('map.pickText')}</p>
-            </aside>
-          )}
+          <RaionPanel raion={panelRaion} onOpen={() => panelRaion && pick(panelRaion)} />
         </div>
       </section>
 
@@ -247,42 +243,79 @@ const RaionCard: React.FC<{ raion: RaionView; onOpen: () => void }> = ({ raion, 
   )
 }
 
-const PhotoGrid: React.FC<{ title: string; items: PhotoView[] }> = ({ title, items }) => (
-  <>
-    <div className="panel__subtitle">{title}</div>
-    <ul className="panel__photos">
-      {items.map((item, i) => (
-        <li key={i}>
-          <div className="panel__photo">
-            {item.image && <Image src={item.image.url} alt={item.image.alt} fill sizes="120px" />}
-          </div>
-          <span>{item.name}</span>
-        </li>
-      ))}
-    </ul>
-  </>
-)
+const PHOTO_SLOTS = 3
 
-const RaionPanel: React.FC<{ raion: RaionView; onOpen: () => void }> = ({ raion, onOpen }) => {
+// Always renders three tiles so every district's panel has the same height; missing photos
+// become quiet "coming soon" placeholders.
+const PhotoGrid: React.FC<{ title: string; items: PhotoView[] }> = ({ title, items }) => {
+  const t = useTranslations('map')
+  const slots = Array.from({ length: PHOTO_SLOTS }, (_, i) => items[i])
+
+  return (
+    <>
+      <div className="panel__subtitle">{title}</div>
+      <ul className="panel__photos">
+        {slots.map((item, i) => (
+          <li key={i}>
+            <div className={`panel__photo${item?.image ? '' : ' panel__photo--empty'}`}>
+              {item?.image && <Image src={item.image.url} alt={item.image.alt} fill sizes="120px" />}
+            </div>
+            <span className={item ? undefined : 'panel__photo-soon'}>{item?.name ?? t('soon')}</span>
+          </li>
+        ))}
+      </ul>
+    </>
+  )
+}
+
+type PanelProps = { raion?: RaionView; onOpen: () => void }
+
+// One layout for both the "pick a district" prompt and a selected district, so switching
+// between them never changes the section height (which made the sketch below jump).
+const RaionPanel: React.FC<PanelProps> = ({ raion, onOpen }) => {
   const t = useTranslations('map')
 
   return (
-    <aside className="panel" aria-live="polite">
-      <button type="button" className="panel__media" onClick={onOpen} aria-label={t('watch')}>
-        {raion.cover && <Image src={raion.cover.url} alt={raion.cover.alt} fill sizes="(max-width: 1000px) 100vw, 30vw" />}
-        <span className="panel__play">
-          <PlayIcon />
-        </span>
-        <span className="panel__caption">{raion.name}</span>
-      </button>
+    <aside className={`panel${raion ? '' : ' panel--empty'}`} aria-live="polite">
+      {raion ? (
+        <button type="button" className="panel__media" onClick={onOpen} aria-label={t('watch')}>
+          {raion.cover && (
+            <Image
+              key={raion.cover.url}
+              src={raion.cover.url}
+              alt={raion.cover.alt}
+              fill
+              sizes="(max-width: 1000px) 100vw, 30vw"
+            />
+          )}
+          <span className="panel__play">
+            <PlayIcon />
+          </span>
+          <span className="panel__caption">{raion.name}</span>
+        </button>
+      ) : (
+        <div className="panel__media panel__media--empty" aria-hidden="true">
+          <span className="panel__empty-art">
+            {REGION_ORDER.map((region) => (
+              <span key={region} style={{ background: REGION_COLORS[region].fill }} />
+            ))}
+          </span>
+        </div>
+      )}
       <div className="panel__body">
-        <h3 className="panel__title">{t('raion', { name: raion.name })}</h3>
-        {raion.intro && <p className="panel__text">{raion.intro}</p>}
-        <button type="button" className="btn btn--dark btn--xs" onClick={onOpen}>
+        <h3 className="panel__title">{raion ? t('raion', { name: raion.name }) : t('pickTitle')}</h3>
+        <p className="panel__text">{raion ? raion.intro : t('pickText')}</p>
+        <button
+          type="button"
+          className="btn btn--dark btn--xs"
+          onClick={onOpen}
+          disabled={!raion}
+          style={raion ? undefined : { visibility: 'hidden' }}
+        >
           {t('watch')} <span aria-hidden="true">→</span>
         </button>
-        {raion.sights.length > 0 && <PhotoGrid title={t('sights')} items={raion.sights} />}
-        {raion.dishes.length > 0 && <PhotoGrid title={t('dishes')} items={raion.dishes} />}
+        <PhotoGrid title={t('sights')} items={raion?.sights ?? []} />
+        <PhotoGrid title={t('dishes')} items={raion?.dishes ?? []} />
       </div>
     </aside>
   )

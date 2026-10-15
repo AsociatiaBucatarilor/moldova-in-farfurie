@@ -26,7 +26,8 @@
     "dishes": "Local gastronomy",
     "allRegions": "All regions",
     "pickTitle": "Pick a district",
-    "pickText": "Hover over the map to preview a district, then click it to open its episode and teaser."
+    "pickText": "Hover over the map to preview a district, then click it to open its episode and teaser.",
+    "soon": "Coming soon"
   },
   "grid": {
     "all": "All",
