@@ -10,3 +10,7 @@ node_modules
 public/media/
 
 next-env.d.ts
+
+.vercel
+.env*
+*.tsbuildinfo

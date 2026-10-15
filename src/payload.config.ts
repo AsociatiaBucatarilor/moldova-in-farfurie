@@ -1,5 +1,6 @@
 import { postgresAdapter } from '@payloadcms/db-postgres'
 import { lexicalEditor } from '@payloadcms/richtext-lexical'
+import { vercelBlobStorage } from '@payloadcms/storage-vercel-blob'
 import path from 'path'
 import { buildConfig } from 'payload'
 import sharp from 'sharp'
@@ -11,6 +12,7 @@ import Users from './collections/Users'
 import { seedHandler } from './endpoints/seedHandler'
 import { Landing } from './globals/Landing'
 import localization from './i18n/localization'
+import { getAllowedOrigins } from './utilities/serverUrl'
 
 const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
@@ -37,8 +39,8 @@ export default buildConfig({
   }),
   collections: [Raioane, Media, Users],
   globals: [Landing],
-  cors: [process.env.PAYLOAD_PUBLIC_SERVER_URL || ''].filter(Boolean),
-  csrf: [process.env.PAYLOAD_PUBLIC_SERVER_URL || ''].filter(Boolean),
+  cors: getAllowedOrigins(),
+  csrf: getAllowedOrigins(),
   endpoints: [
     // Populates the database with the content from the design.
     // Remove this endpoint once the real content is in place.
@@ -47,6 +49,25 @@ export default buildConfig({
       method: 'get',
       path: '/seed',
     },
+  ],
+  plugins: [
+    // Uploads go to Vercel Blob (the serverless filesystem is read-only).
+    // Without a token, files fall back to public/media on disk.
+    vercelBlobStorage({
+      enabled: Boolean(process.env.BLOB_READ_WRITE_TOKEN),
+      collections: {
+        media: {
+          // Serve files straight from the Blob CDN instead of proxying through /api/media
+          disablePayloadAccessControl: true,
+          // Separate folder per environment, so local and production databases sharing this
+          // store never overwrite or delete each other's files
+          prefix: process.env.BLOB_PREFIX || process.env.VERCEL_ENV || 'local',
+        },
+      },
+      token: process.env.BLOB_READ_WRITE_TOKEN,
+      // Upload from the browser to bypass the 4.5 MB serverless request limit
+      clientUploads: process.env.BLOB_CLIENT_UPLOADS !== "false",
+    }),
   ],
   localization,
   secret: process.env.PAYLOAD_SECRET!,

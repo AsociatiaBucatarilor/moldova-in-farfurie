@@ -6,6 +6,7 @@ import { notFound } from 'next/navigation'
 import React from 'react'
 
 import { routing } from '@/i18n/routing'
+import { getServerUrl } from '@/utilities/serverUrl'
 
 import './globals.css'
 
@@ -63,7 +64,7 @@ export default async function RootLayout({ children, params }: Args) {
 }
 
 export const metadata: Metadata = {
-  metadataBase: new URL(process.env.NEXT_PUBLIC_SERVER_URL || 'http://localhost:3000'),
+  metadataBase: new URL(getServerUrl()),
   title: 'Moldova în Farfurie · by Chef’s Forum',
   description:
     'Un proiect care aduce împreună gastronomia locală, turismul și oamenii care păstrează autenticitatea Moldovei.',

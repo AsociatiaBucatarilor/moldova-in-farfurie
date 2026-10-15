@@ -11,9 +11,17 @@ const TRANSLATIONS: Locale[] = ['ru', 'en']
 type Args = { payload: Payload; req?: PayloadRequest }
 
 export const seed = async ({ payload, req }: Args): Promise<void> => {
-  const context = { disableRevalidate: true }
-  // depth 0 keeps relations as ids, so returned rows can be sent back as-is
-  const base = { req, context, depth: 0 }
+  // depth 0 keeps relations as ids, so returned rows can be sent back as-is.
+  // The cloud storage plugin caches the file being uploaded on the request context and never
+  // replaces it, so every operation gets a fresh context with that cache cleared — otherwise
+  // all uploads after the first one would silently be skipped.
+  const base = {
+    req,
+    depth: 0,
+    get context() {
+      return { disableRevalidate: true, _payloadCloudStorage: undefined }
+    },
+  }
 
   payload.logger.info('Seeding: clearing raioane and media…')
   const current = await payload.findGlobal({ ...base, slug: 'landing' })
