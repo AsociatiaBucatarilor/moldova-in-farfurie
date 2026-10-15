@@ -1,37 +1,30 @@
-# Payload Localization Example (i18n)
+# Moldova în Farfurie
 
-This example is built based on an old version of the website template.
+Landing page pentru proiectul „Moldova în Farfurie” by Chef's Forum, construit pe Payload CMS 3 + Next.js 15,
+pornind de la exemplul oficial de localizare. Limbi: română (`/`), rusă (`/ru`), engleză (`/en`).
 
-The objective is to show how to implement localization in a website. There is no guarantee that it will be kept up to date with the website template or the latest Payload enhancements.
+## Pornire locală
 
-To facilitate the localization process, this example uses the next-intl library.
+```bash
+pnpm install
+pnpm dev           # http://localhost:3000, admin la /admin
+pnpm seed          # încarcă conținutul din design (32 de raioane, imagini, texte ro/ru/en)
+```
 
-## Setup
+Baza de date: Postgres local, setat prin `DATABASE_URL` în `.env` (vezi `.env.example`).
+Alternativ, Postgres în Docker: `docker compose up -d` și `DATABASE_URL` din comentariul din `docker-compose.yml`.
 
-1. Run the following command to create a project from the example:
+## Conținut în admin
 
-- `npx create-payload-app --example localization`
+- **Raioane** — câte un document pe raion: zona (Nord/Centru/Sud), conturul de pe hartă, linkurile YouTube
+  pentru episod și teaser, copertă, „Locuri și patrimoniu”, „La masa locului”, obiective și gastronomie.
+  Fără link YouTube, pop-up-ul afișează „în curând”.
+- **Pagina principală** (global) — hero și trailer, textele hărții, grila de raioane, citat, parteneri, footer.
 
-2. `cp .env.example .env` (copy the .env.example file to .env)
-3. Ensure MongoDB is running and `DATABASE_URL` points to it (for example `mongodb://127.0.0.1/payload-example-localization`)
-4. `pnpm install`
-5. `pnpm run dev`
-6. Seed your database in the admin panel (see below)
+Textele de interfață (butoane, etichete) sunt în `src/i18n/messages/*.json`.
 
-## Seed
+## Harta
 
-To seed the database with a few pages, posts, and projects you can click the 'seed database' link from the admin panel.
-
-The seed script will also create a demo user for demonstration purposes only:
-
-- Demo Author
-  - Email: `demo-author@payloadcms.com`
-  - Password: `password`
-
-> NOTICE: seeding the database is destructive because it drops your current database to populate a fresh one from the seed template. Only run this command if you are starting a new project or can afford to lose your current data.
-
-## Important!
-
-The seed script only creates translations in English and Spanish, so you will not see the website translated to other languages even if you see them in the dropdown menu.
-
-You can translate documents to other languages from the admin panel.
+`src/components/landing/mapShapes.ts` conține contururile SVG ale celor 37 de unități administrative,
+generate din [geoBoundaries](https://www.geoboundaries.org/) (CC BY 4.0). Unitățile fără document în
+colecția Raioane (Chișinău, Bălți, Bender, UTA Găgăuzia, Stînga Nistrului) apar gri și nu sunt clicabile.

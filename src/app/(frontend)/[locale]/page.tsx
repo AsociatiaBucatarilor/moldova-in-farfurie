@@ -1,86 +1,79 @@
-import { Metadata } from 'next'
-// import PageTemplate from './[slug]/page'
-
 import configPromise from '@payload-config'
-import { getPayload } from 'payload'
-import { draftMode } from 'next/headers'
+import type { Metadata } from 'next'
+import { setRequestLocale } from 'next-intl/server'
+import { getPayload, type TypedLocale } from 'payload'
 import React, { cache } from 'react'
-import { generateMeta } from '@/utilities/generateMeta'
-import { TypedLocale } from 'payload'
-import { PayloadRedirects } from '@/components/PayloadRedirects'
-import { homeStatic } from '@/endpoints/seed/home-static'
-import type { Page as PageType } from '@/payload-types'
-import { RenderBlocks } from '@/blocks/RenderBlocks'
-import { RenderHero } from '@/heros/RenderHero'
-import PageClient from './[slug]/page.client'
+
+import { Explorer } from '@/components/landing/Explorer'
+import { Hero } from '@/components/landing/Hero'
+import { ModalProvider } from '@/components/landing/ModalProvider'
+import { Partners } from '@/components/landing/Partners'
+import { Quote } from '@/components/landing/Quote'
+import { SiteFooter } from '@/components/landing/SiteFooter'
+import { toRaionView } from '@/components/landing/toView'
+import { getYouTubeId } from '@/utilities/youtube'
 
 type Args = {
-  params: Promise<{
-    slug?: string
-    locale: TypedLocale
-  }>
+  params: Promise<{ locale: TypedLocale }>
 }
 
-export default async function Page({ params: paramsPromise }: Args) {
-  const { slug = 'home', locale = 'en' } = await paramsPromise
-  const url = '/' + slug
+const getContent = cache(async (locale: TypedLocale) => {
+  const payload = await getPayload({ config: configPromise })
 
-  let page: PageType | null
+  const [landing, raioane] = await Promise.all([
+    payload.findGlobal({ slug: 'landing', locale, depth: 1 }),
+    payload.find({
+      collection: 'raioane',
+      locale,
+      depth: 1,
+      limit: 100,
+      pagination: false,
+      sort: 'name',
+    }),
+  ])
 
-  page = await queryPage({
-    slug,
-    locale,
-  })
+  return { landing, raioane: raioane.docs.map(toRaionView) }
+})
 
-  // Remove this code once your website is seeded
-  if (!page && slug === 'home') {
-    page = homeStatic
-  }
+export default async function Page({ params }: Args) {
+  const { locale } = await params
+  setRequestLocale(locale)
 
-  if (!page) {
-    return <PayloadRedirects url={url} />
-  }
-
-  const { hero, layout } = page
+  const { landing, raioane } = await getContent(locale)
+  const featured = landing.map?.featured
+  const featuredId = typeof featured === 'object' && featured ? featured.id : featured
 
   return (
-    <article className="pt-16 pb-24">
-      <PageClient />
-      <PayloadRedirects disableNotFound url={url} />
-
-      <RenderHero {...hero} />
-      <RenderBlocks blocks={layout} locale={locale} />
-    </article>
+    <ModalProvider raioane={raioane} trailerId={getYouTubeId(landing.hero?.trailerUrl)}>
+      <main className="landing">
+        <Hero hero={landing.hero} />
+        <Explorer
+          raioane={raioane}
+          map={landing.map}
+          districts={landing.districts}
+          featuredId={featuredId ?? null}
+        />
+        <Quote quote={landing.quote} />
+        <Partners partners={landing.partners} />
+        <SiteFooter footer={landing.footer} />
+      </main>
+    </ModalProvider>
   )
 }
 
 export async function generateMetadata({ params }: Args): Promise<Metadata> {
-  const { locale = 'en', slug = 'home' } = await params
-  const page = await queryPage({
-    locale,
-    slug,
-  })
+  const { locale } = await params
+  const { landing } = await getContent(locale)
+  const description = landing.hero?.description || undefined
+  const image = landing.hero?.background
 
-  return generateMeta({ doc: page })
-}
-
-const queryPage = cache(async ({ locale, slug }: { locale: TypedLocale; slug: string }) => {
-  const { isEnabled: draft } = await draftMode()
-
-  const payload = await getPayload({ config: configPromise })
-
-  const result = await payload.find({
-    collection: 'pages',
-    draft,
-    limit: 1,
-    overrideAccess: draft,
-    locale: locale,
-    where: {
-      slug: {
-        equals: slug,
-      },
+  return {
+    title: 'Moldova în Farfurie · by Chef’s Forum',
+    description,
+    openGraph: {
+      title: 'Moldova în Farfurie',
+      description,
+      images: typeof image === 'object' && image?.url ? [image.url] : undefined,
     },
-  })
-
-  return result.docs?.[0] || null
-})
+  }
+}

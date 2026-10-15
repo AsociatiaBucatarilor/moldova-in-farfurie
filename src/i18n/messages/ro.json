@@ -1,0 +1,47 @@
+{
+  "nav": {
+    "home": "Acasă",
+    "about": "Despre proiect",
+    "map": "Harta",
+    "districts": "Raioane",
+    "partners": "Parteneri",
+    "watch": "Urmărește proiectul",
+    "language": "Limba"
+  },
+  "hero": {
+    "trailer": "Vezi trailerul",
+    "about": "Despre proiect"
+  },
+  "regions": {
+    "nord": "Nord",
+    "centru": "Centru",
+    "sud": "Sud"
+  },
+  "map": {
+    "label": "Harta raioanelor Moldovei",
+    "raion": "Raionul {name}",
+    "watch": "Vezi episodul",
+    "sights": "Obiective turistice",
+    "dishes": "Gastronomie locală"
+  },
+  "grid": {
+    "all": "Toate",
+    "count": "{count, plural, one {# raion} few {# raioane} other {# de raioane}}",
+    "open": "Vezi episodul despre {name}"
+  },
+  "modal": {
+    "episode": "Episodul",
+    "teaser": "Teaserul",
+    "trailer": "Trailerul",
+    "soon": "{kind} · în curând",
+    "soonText": "Călătoria este în pregătire. Video-ul va fi disponibil aici după lansare.",
+    "kicker": "{region} · Moldova în Farfurie",
+    "heritage": "Locuri și patrimoniu",
+    "food": "La masa locului",
+    "status": "Episod și teaser în pregătire",
+    "more": "Descoperă mai mult pe Moldova Travel",
+    "close": "Închide"
+  },
+  "page-not-found": "Pagina nu a fost găsită.",
+  "go-home": "Înapoi acasă"
+}

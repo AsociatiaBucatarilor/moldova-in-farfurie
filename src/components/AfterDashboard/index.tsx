@@ -15,7 +15,7 @@ const SuccessMessage: React.FC = () => (
 export const SeedButton: React.FC = () => {
   const [loading, setLoading] = useState(false)
   const [seeded, setSeeded] = useState(false)
-  const [error, setError] = useState(null)
+  const [error, setError] = useState<string | null>(null)
 
   const handleClick = useCallback(
     async (e) => {
@@ -25,11 +25,17 @@ export const SeedButton: React.FC = () => {
       setLoading(true)
 
       try {
-        await fetch('/api/seed')
+        const res = await fetch('/api/seed')
+        if (!res.ok) {
+          const body = await res.json().catch(() => ({}))
+          throw new Error(body.error || res.statusText)
+        }
         setSeeded(true)
         toast.success(<SuccessMessage />, { duration: 5000 })
       } catch (err) {
-        setError(err)
+        setError(err instanceof Error ? err.message : String(err))
+      } finally {
+        setLoading(false)
       }
     },
     [loading, seeded],
@@ -43,7 +49,7 @@ export const SeedButton: React.FC = () => {
   return (
     <Fragment>
       <a href="/api/seed" onClick={handleClick} rel="noopener noreferrer" target="_blank">
-        Reset / seed database
+        Încarcă conținutul din design (resetează raioanele și media)
       </a>
       {message}
     </Fragment>

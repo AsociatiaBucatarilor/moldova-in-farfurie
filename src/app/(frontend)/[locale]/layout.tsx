@@ -1,79 +1,72 @@
 import type { Metadata } from 'next'
-
-import { cn } from '@/utilities/ui'
-import { GeistMono } from 'geist/font/mono'
-import { GeistSans } from 'geist/font/sans'
+import { Allura, Cormorant_Garamond, Marcellus, Source_Sans_3 } from 'next/font/google'
+import { NextIntlClientProvider } from 'next-intl'
+import { getMessages, setRequestLocale } from 'next-intl/server'
+import { notFound } from 'next/navigation'
 import React from 'react'
 
-import { Footer } from '@/globals/Footer/Component'
-import { Header } from '@/globals/Header/Component'
-import { LivePreviewListener } from '@/components/LivePreviewListener'
-import { Providers } from '@/providers'
-import { InitTheme } from '@/providers/Theme/InitTheme'
-import { mergeOpenGraph } from '@/utilities/mergeOpenGraph'
-import { draftMode } from 'next/headers'
-import { TypedLocale } from 'payload'
+import { routing } from '@/i18n/routing'
 
 import './globals.css'
-import { getMessages, setRequestLocale } from 'next-intl/server'
-import { NextIntlClientProvider } from 'next-intl'
-import { routing } from '@/i18n/routing'
-import { notFound } from 'next/navigation'
-import localization from '@/i18n/localization'
+
+const marcellus = Marcellus({
+  subsets: ['latin', 'latin-ext'],
+  weight: '400',
+  variable: '--font-marcellus',
+})
+const cormorant = Cormorant_Garamond({
+  subsets: ['latin', 'latin-ext', 'cyrillic'],
+  weight: ['500', '600'],
+  style: ['normal', 'italic'],
+  variable: '--font-cormorant',
+})
+const allura = Allura({
+  subsets: ['latin', 'latin-ext'],
+  weight: '400',
+  variable: '--font-allura',
+})
+const sourceSans = Source_Sans_3({
+  subsets: ['latin', 'latin-ext', 'cyrillic'],
+  weight: ['400', '600'],
+  variable: '--font-sans',
+})
 
 type Args = {
   children: React.ReactNode
-  params: Promise<{
-    locale: TypedLocale
-  }>
+  params: Promise<{ locale: string }>
 }
 
 export default async function RootLayout({ children, params }: Args) {
   const { locale } = await params
-  const currentLocale = localization.locales.find((loc) => loc.code === locale)
-  const direction = currentLocale?.rtl ? 'rtl' : 'ltr'
 
   if (!routing.locales.includes(locale as any)) {
     notFound()
   }
   setRequestLocale(locale)
 
-  const { isEnabled } = await draftMode()
   const messages = await getMessages()
 
   return (
     <html
-      className={cn(GeistSans.variable, GeistMono.variable)}
+      className={[marcellus.variable, cormorant.variable, allura.variable, sourceSans.variable].join(' ')}
       lang={locale}
-      dir={direction}
-      suppressHydrationWarning
     >
       <head>
-        <InitTheme />
         <link href="/favicon.ico" rel="icon" sizes="32x32" />
         <link href="/favicon.svg" rel="icon" type="image/svg+xml" />
       </head>
       <body>
-        <Providers>
-          <NextIntlClientProvider messages={messages}>
-            <LivePreviewListener />
-            <Header locale={locale} />
-            {children}
-            <Footer locale={locale} />
-          </NextIntlClientProvider>
-        </Providers>
+        <NextIntlClientProvider messages={messages}>{children}</NextIntlClientProvider>
       </body>
     </html>
   )
 }
 
 export const metadata: Metadata = {
-  metadataBase: new URL(process.env.NEXT_PUBLIC_SERVER_URL || 'https://payloadcms.com'),
-  openGraph: mergeOpenGraph(),
-  twitter: {
-    card: 'summary_large_image',
-    creator: '@payloadcms',
-  },
+  metadataBase: new URL(process.env.NEXT_PUBLIC_SERVER_URL || 'http://localhost:3000'),
+  title: 'Moldova în Farfurie · by Chef’s Forum',
+  description:
+    'Un proiect care aduce împreună gastronomia locală, turismul și oamenii care păstrează autenticitatea Moldovei.',
 }
 
 export function generateStaticParams() {

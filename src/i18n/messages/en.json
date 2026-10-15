@@ -1,16 +1,47 @@
 {
-  "date-published": "Date Published",
-  "author": "Author",
+  "nav": {
+    "home": "Home",
+    "about": "About",
+    "map": "Map",
+    "districts": "Districts",
+    "partners": "Partners",
+    "watch": "Watch the project",
+    "language": "Language"
+  },
+  "hero": {
+    "trailer": "Watch the trailer",
+    "about": "About the project"
+  },
+  "regions": {
+    "nord": "North",
+    "centru": "Centre",
+    "sud": "South"
+  },
+  "map": {
+    "label": "Map of Moldova's districts",
+    "raion": "{name} District",
+    "watch": "Watch the episode",
+    "sights": "Places to visit",
+    "dishes": "Local gastronomy"
+  },
+  "grid": {
+    "all": "All",
+    "count": "{count, plural, one {# district} other {# districts}}",
+    "open": "Watch the episode about {name}"
+  },
+  "modal": {
+    "episode": "Episode",
+    "teaser": "Teaser",
+    "trailer": "Trailer",
+    "soon": "{kind} · coming soon",
+    "soonText": "The journey is being prepared. The video will be available here after the premiere.",
+    "kicker": "{region} · Moldova în Farfurie",
+    "heritage": "Places and heritage",
+    "food": "At the local table",
+    "status": "Episode and teaser in production",
+    "more": "Discover more on Moldova Travel",
+    "close": "Close"
+  },
   "page-not-found": "This page could not be found.",
-  "go-home": "Go home",
-  "loading": "Loading, please wait...",
-  "posts": "Posts",
-  "post": "Post",
-  "showing": "Showing",
-  "of": "of",
-  "search": "Search",
-  "dashboard": "Dashboard",
-  "previous": "Previous",
-  "next": "Next",
-  "more-pages": "More pages"
+  "go-home": "Go home"
 }
