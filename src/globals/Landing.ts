@@ -129,19 +129,26 @@ export const Landing: GlobalConfig = {
           label: 'Parteneri',
           fields: [
             {
+              name: 'title',
+              label: 'Titlu',
+              type: 'text',
+              localized: true,
+              admin: { description: 'Afișat deasupra caruselului cu logo-uri.' },
+            },
+            {
               name: 'items',
               label: 'Parteneri',
               type: 'array',
+              admin: { description: 'Logo-urile defilează într-un carusel, în ordinea de aici.' },
               fields: [
                 {
                   type: 'row',
                   fields: [
-                    { name: 'label', label: 'Rol (ex. „Partener principal”)', type: 'text', localized: true },
                     { name: 'name', label: 'Nume', type: 'text', required: true },
+                    { name: 'url', label: 'Link', type: 'text' },
                   ],
                 },
                 { name: 'logo', label: 'Logo', type: 'upload', relationTo: 'media', required: true },
-                { name: 'url', label: 'Link', type: 'text' },
               ],
             },
           ],

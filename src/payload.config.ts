@@ -11,6 +11,7 @@ import { Raioane } from './collections/Raioane'
 import Users from './collections/Users'
 import { seedHandler } from './endpoints/seedHandler'
 import { Landing } from './globals/Landing'
+import { Legal } from './globals/Legal'
 import localization from './i18n/localization'
 import { getAllowedOrigins } from './utilities/serverUrl'
 
@@ -38,7 +39,7 @@ export default buildConfig({
     },
   }),
   collections: [Raioane, Media, Users],
-  globals: [Landing],
+  globals: [Landing, Legal],
   cors: getAllowedOrigins(),
   csrf: getAllowedOrigins(),
   endpoints: [

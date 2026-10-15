@@ -91,9 +91,11 @@ export interface Config {
   fallbackLocale: ('false' | 'none' | 'null') | false | null | ('ro' | 'ru' | 'en') | ('ro' | 'ru' | 'en')[];
   globals: {
     landing: Landing;
+    legal: Legal;
   };
   globalsSelect: {
     landing: LandingSelect<false> | LandingSelect<true>;
+    legal: LegalSelect<false> | LegalSelect<true>;
   };
   locale: 'ro' | 'ru' | 'en';
   widgets: {
@@ -568,12 +570,18 @@ export interface Landing {
     author?: string | null;
   };
   partners?: {
+    /**
+     * Afișat deasupra caruselului cu logo-uri.
+     */
+    title?: string | null;
+    /**
+     * Logo-urile defilează într-un carusel, în ordinea de aici.
+     */
     items?:
       | {
-          label?: string | null;
           name: string;
-          logo: number | Media;
           url?: string | null;
+          logo: number | Media;
           id?: string | null;
         }[]
       | null;
@@ -589,6 +597,59 @@ export interface Landing {
     hashtag?: string | null;
     copyright?: string | null;
     madeWith?: string | null;
+  };
+  updatedAt?: string | null;
+  createdAt?: string | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "legal".
+ */
+export interface Legal {
+  id: number;
+  privacy: {
+    title: string;
+    updatedOn?: string | null;
+    /**
+     * Pagina /politica-de-confidentialitate. Textul juridic trebuie verificat de un jurist.
+     */
+    content?: {
+      root: {
+        type: string;
+        children: {
+          type: any;
+          version: number;
+          [k: string]: unknown;
+        }[];
+        direction: ('ltr' | 'rtl') | null;
+        format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+        indent: number;
+        version: number;
+      };
+      [k: string]: unknown;
+    } | null;
+  };
+  cookies: {
+    title: string;
+    updatedOn?: string | null;
+    /**
+     * Pagina /politica-cookie. Dacă adăugați servicii noi (analytics, pixeli etc.), actualizați lista de cookie-uri.
+     */
+    content?: {
+      root: {
+        type: string;
+        children: {
+          type: any;
+          version: number;
+          [k: string]: unknown;
+        }[];
+        direction: ('ltr' | 'rtl') | null;
+        format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+        indent: number;
+        version: number;
+      };
+      [k: string]: unknown;
+    } | null;
   };
   updatedAt?: string | null;
   createdAt?: string | null;
@@ -640,13 +701,13 @@ export interface LandingSelect<T extends boolean = true> {
   partners?:
     | T
     | {
+        title?: T;
         items?:
           | T
           | {
-              label?: T;
               name?: T;
-              logo?: T;
               url?: T;
+              logo?: T;
               id?: T;
             };
       };
@@ -663,6 +724,29 @@ export interface LandingSelect<T extends boolean = true> {
         hashtag?: T;
         copyright?: T;
         madeWith?: T;
+      };
+  updatedAt?: T;
+  createdAt?: T;
+  globalType?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "legal_select".
+ */
+export interface LegalSelect<T extends boolean = true> {
+  privacy?:
+    | T
+    | {
+        title?: T;
+        updatedOn?: T;
+        content?: T;
+      };
+  cookies?:
+    | T
+    | {
+        title?: T;
+        updatedOn?: T;
+        content?: T;
       };
   updatedAt?: T;
   createdAt?: T;

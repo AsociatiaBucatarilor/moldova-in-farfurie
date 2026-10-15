@@ -3,6 +3,9 @@
 import { useTranslations } from 'next-intl'
 import React, { useEffect, useId, useRef, useState } from 'react'
 
+import { Link } from '@/i18n/routing'
+
+import { useConsent } from './CookieConsent'
 import { PlayIcon } from './icons'
 import { REGION_COLORS, type RaionView } from './types'
 
@@ -61,6 +64,29 @@ type PlayerProps = { videoId: string | null; kind: string; title: string }
 
 const Player: React.FC<PlayerProps> = ({ videoId, kind, title }) => {
   const t = useTranslations('modal')
+  const tCookies = useTranslations('cookies')
+  const { consent, setConsent } = useConsent()
+
+  // YouTube sets its own cookies, so the embed only loads once external content is accepted
+  if (videoId && consent !== 'all') {
+    return (
+      <div className="player player--soon player--consent">
+        <span className="player__icon">
+          <PlayIcon />
+        </span>
+        <p className="player__title">{tCookies('videoTitle')}</p>
+        <p className="player__text">
+          {tCookies('videoText')}{' '}
+          <Link href="/politica-cookie" className="player__link">
+            {tCookies('policy')}
+          </Link>
+        </p>
+        <button type="button" className="btn btn--light btn--sm player__accept" onClick={() => setConsent('all')}>
+          {tCookies('videoAccept')}
+        </button>
+      </div>
+    )
+  }
 
   if (videoId) {
     return (

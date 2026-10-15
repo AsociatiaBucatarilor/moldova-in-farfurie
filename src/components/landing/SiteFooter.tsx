@@ -1,8 +1,10 @@
 import { useTranslations } from 'next-intl'
 import React from 'react'
 
+import { Link } from '@/i18n/routing'
 import type { Landing } from '@/payload-types'
 
+import { CookieSettingsButton } from './CookieConsent'
 import {
   FacebookIcon,
   InstagramIcon,
@@ -17,6 +19,7 @@ import { NAV_LINKS } from './SiteHeader'
 export const SiteFooter: React.FC<{ footer: Landing['footer'] }> = ({ footer }) => {
   const t = useTranslations('nav')
   const tContacts = useTranslations('contacts')
+  const tLegal = useTranslations('legal')
   const phone = footer?.phone?.trim()
   const email = footer?.email?.trim()
   const address = footer?.address?.trim()
@@ -32,20 +35,20 @@ export const SiteFooter: React.FC<{ footer: Landing['footer'] }> = ({ footer }) 
   return (
     <footer id="contacte" className="site-footer">
       <div className="site-footer__main">
-        <a href="#top" className="brand">
+        <Link href="/" className="brand">
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img src="/assets/logo-footer.png" alt="" className="brand__logo brand__logo--multiply" />
           <span className="brand__text">
             <span className="brand__name">MOLDOVA ÎN FARFURIE</span>
             <span className="brand__by">by Chef&apos;s Forum</span>
           </span>
-        </a>
+        </Link>
         <nav className="site-footer__links" aria-label="Footer">
-          <a href="#top">{t('home')}</a>
+          <Link href="/">{t('home')}</Link>
           {NAV_LINKS.map((link) => (
-            <a key={link.key} href={link.href}>
+            <Link key={link.key} href={`/#${link.section}`}>
               {t(link.key)}
-            </a>
+            </Link>
           ))}
         </nav>
         {hasContacts && (
@@ -89,6 +92,11 @@ export const SiteFooter: React.FC<{ footer: Landing['footer'] }> = ({ footer }) 
       </div>
       <div className="site-footer__bottom">
         <span>{footer?.copyright}</span>
+        <nav className="site-footer__legal" aria-label={tLegal('privacy')}>
+          <Link href="/politica-de-confidentialitate">{tLegal('privacy')}</Link>
+          <Link href="/politica-cookie">{tLegal('cookies')}</Link>
+          <CookieSettingsButton className="site-footer__legal-button" />
+        </nav>
         {footer?.madeWith && <span>♡ {footer.madeWith}</span>}
       </div>
     </footer>

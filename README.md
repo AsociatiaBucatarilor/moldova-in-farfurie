@@ -8,8 +8,22 @@ pornind de la exemplul oficial de localizare. Limbi: română (`/`), rusă (`/ru
 ```bash
 pnpm install
 pnpm dev           # http://localhost:3000, admin la /admin
-pnpm seed          # încarcă conținutul din design (32 de raioane, imagini, texte ro/ru/en)
+pnpm seed          # încarcă conținutul din design (32 de raioane, imagini, texte ro/ru/en) — resetează conținutul!
+pnpm seed:legal    # completează doar politicile legale și titlul partenerilor (sigur pe producție)
 ```
+
+## Migrații (producție)
+
+Local, schema bazei se actualizează automat. Pentru producție, după orice schimbare de câmpuri:
+
+```bash
+pnpm migrate:create nume_schimbare
+```
+
+Vercel rulează `payload migrate` la fiecare deploy (scriptul `vercel-build`). Verificați fișierul generat:
+scoateți liniile `ALTER COLUMN "prefix" SET/DROP DEFAULT 'local'` (vin din prefixul local al Vercel Blob)
+și evitați să ștergeți tabele/coloane încă citite de versiunea live — migrația rulează înainte ca noul
+deploy să devină activ.
 
 Baza de date: Postgres local, setat prin `DATABASE_URL` în `.env` (vezi `.env.example`).
 Alternativ, Postgres în Docker: `docker compose up -d` și `DATABASE_URL` din comentariul din `docker-compose.yml`.
@@ -19,7 +33,11 @@ Alternativ, Postgres în Docker: `docker compose up -d` și `DATABASE_URL` din c
 - **Raioane** — câte un document pe raion: zona (Nord/Centru/Sud), conturul de pe hartă, linkurile YouTube
   pentru episod și teaser, copertă, „Locuri și patrimoniu”, „La masa locului”, obiective și gastronomie.
   Fără link YouTube, pop-up-ul afișează „în curând”.
-- **Pagina principală** (global) — hero și trailer, textele hărții, grila de raioane, citat, parteneri, footer.
+- **Pagina principală** (global) — hero și trailer, textele hărții, grila de raioane, citat, parteneri, footer și contacte.
+- **Politici legale** (global) — Politica de confidențialitate (`/politica-de-confidentialitate`) și Politica de cookie-uri
+  (`/politica-cookie`). Textele inițiale sunt un draft conform Legii nr. 133/2011 și trebuie verificate de un jurist.
+
+Videoclipurile YouTube se încarcă doar după consimțământul vizitatorului (bannerul de cookie-uri).
 
 Textele de interfață (butoane, etichete) sunt în `src/i18n/messages/*.json`.
 

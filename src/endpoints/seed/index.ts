@@ -3,6 +3,7 @@ import type { Payload, PayloadRequest } from 'payload'
 
 import type { Media } from '@/payload-types'
 
+import { seedLegal } from './seedLegal'
 import { LANDING, RAIOANE, raionFood, raionIntro, type Locale, type Localized } from './data'
 
 const IMAGES_DIR = path.resolve(process.cwd(), 'src/endpoints/seed/images')
@@ -145,12 +146,9 @@ export const seed = async ({ payload, req }: Args): Promise<void> => {
       // No district is preselected: the panel invites visitors to pick one
       map: { ...ro.map, featured: null },
       partners: {
+        title: LANDING.partnersTitle.ro,
         items: await Promise.all(
-          LANDING.partners.map(async (p) => ({
-            name: p.name,
-            label: p.label.ro,
-            logo: await upload(p.logo, p.name),
-          })),
+          LANDING.partners.map(async (p) => ({ name: p.name, logo: await upload(p.logo, p.name) })),
         ),
       },
       footer: { ...ro.footer, hashtag: '#MoldovaInFarfurie' },
@@ -172,15 +170,13 @@ export const seed = async ({ payload, req }: Args): Promise<void> => {
             label: LANDING.hero.stats[i].label[locale],
           })),
         },
-        partners: {
-          items: landing.partners?.items?.map((row, i) => ({
-            ...row,
-            label: LANDING.partners[i].label[locale],
-          })),
-        },
+        partners: { ...landing.partners, title: LANDING.partnersTitle[locale] },
       },
     })
   }
+
+  payload.logger.info('Seeding: privacy and cookie policies…')
+  await seedLegal({ payload, req })
 
   payload.logger.info('Seeding: done.')
 }

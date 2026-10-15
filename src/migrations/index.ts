@@ -1,6 +1,7 @@
 import * as migration_20261015_093257_initial from './20261015_093257_initial';
 import * as migration_20261015_093644_media_prefix from './20261015_093644_media_prefix';
 import * as migration_20261015_102417_footer_contacts from './20261015_102417_footer_contacts';
+import * as migration_20261015_120640_partners_title_legal from './20261015_120640_partners_title_legal';
 
 export const migrations = [
   {
@@ -16,6 +17,11 @@ export const migrations = [
   {
     up: migration_20261015_102417_footer_contacts.up,
     down: migration_20261015_102417_footer_contacts.down,
-    name: '20261015_102417_footer_contacts'
+    name: '20261015_102417_footer_contacts',
+  },
+  {
+    up: migration_20261015_120640_partners_title_legal.up,
+    down: migration_20261015_120640_partners_title_legal.down,
+    name: '20261015_120640_partners_title_legal'
   },
 ];

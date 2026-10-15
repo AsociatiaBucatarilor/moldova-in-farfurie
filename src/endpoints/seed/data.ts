@@ -216,22 +216,11 @@ export const LANDING = {
       en: '— THE MOLDOVA ÎN FARFURIE TEAM',
     },
   },
+  partnersTitle: { ro: 'În parteneriat cu', ru: 'В партнёрстве с', en: 'In partnership with' },
   partners: [
-    {
-      name: "Chef's Forum",
-      logo: 'logo-chefs.png',
-      label: { ro: 'Un proiect', ru: 'Проект', en: 'A project by' },
-    },
-    {
-      name: 'Ministerul Culturii al Republicii Moldova',
-      logo: 'logo-minister.png',
-      label: { ro: 'În parteneriat cu', ru: 'В партнёрстве с', en: 'In partnership with' },
-    },
-    {
-      name: 'Jetour',
-      logo: 'logo-jetour.png',
-      label: { ro: 'Partener principal', ru: 'Главный партнёр', en: 'Main partner' },
-    },
+    { name: "Chef's Forum", logo: 'logo-chefs.png' },
+    { name: 'Ministerul Culturii al Republicii Moldova', logo: 'logo-minister.png' },
+    { name: 'Jetour', logo: 'logo-jetour.png' },
   ],
   footer: {
     copyright: {

@@ -11,6 +11,7 @@ import { Partners } from '@/components/landing/Partners'
 import { Quote } from '@/components/landing/Quote'
 import { SiteFooter } from '@/components/landing/SiteFooter'
 import { toRaionView } from '@/components/landing/toView'
+import { getLanding } from '@/utilities/getContent'
 import { getYouTubeId } from '@/utilities/youtube'
 
 type Args = {
@@ -21,7 +22,7 @@ const getContent = cache(async (locale: TypedLocale) => {
   const payload = await getPayload({ config: configPromise })
 
   const [landing, raioane] = await Promise.all([
-    payload.findGlobal({ slug: 'landing', locale, depth: 1 }),
+    getLanding(locale),
     payload.find({
       collection: 'raioane',
       locale,

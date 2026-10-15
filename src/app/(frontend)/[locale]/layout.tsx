@@ -4,6 +4,7 @@ import { getMessages, setRequestLocale } from 'next-intl/server'
 import { notFound } from 'next/navigation'
 import React from 'react'
 
+import { ConsentProvider } from '@/components/landing/CookieConsent'
 import { routing } from '@/i18n/routing'
 import { getServerUrl } from '@/utilities/serverUrl'
 
@@ -41,7 +42,9 @@ export default async function RootLayout({ children, params }: Args) {
         <link href="/favicon.svg" rel="icon" type="image/svg+xml" />
       </head>
       <body>
-        <NextIntlClientProvider messages={messages}>{children}</NextIntlClientProvider>
+        <NextIntlClientProvider messages={messages}>
+          <ConsentProvider>{children}</ConsentProvider>
+        </NextIntlClientProvider>
       </body>
     </html>
   )

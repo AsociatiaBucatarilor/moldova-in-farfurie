@@ -56,5 +56,23 @@
     "phone": "Phone",
     "email": "Email",
     "address": "Address"
+  },
+  "cookies": {
+    "title": "We use cookies",
+    "text": "This site only uses strictly necessary cookies (your language and your choice). YouTube videos load only if you also accept cookies for external content.",
+    "policy": "Cookie Policy",
+    "necessary": "Necessary only",
+    "acceptAll": "Accept all",
+    "close": "Close",
+    "settings": "Cookie settings",
+    "videoTitle": "Video hosted on YouTube",
+    "videoText": "To watch it, accept cookies for external content — YouTube may set its own cookies.",
+    "videoAccept": "Accept and play"
+  },
+  "legal": {
+    "privacy": "Privacy Policy",
+    "cookies": "Cookie Policy",
+    "updated": "Last updated: {date}",
+    "back": "Back to the home page"
   }
 }

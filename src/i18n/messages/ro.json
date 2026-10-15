@@ -56,5 +56,23 @@
     "phone": "Telefon",
     "email": "Email",
     "address": "Adresă"
+  },
+  "cookies": {
+    "title": "Folosim cookie-uri",
+    "text": "Site-ul folosește doar cookie-uri strict necesare (limba aleasă și opțiunea ta). Videoclipurile de pe YouTube se încarcă numai dacă accepți și cookie-urile pentru conținut extern.",
+    "policy": "Politica de cookie-uri",
+    "necessary": "Doar necesare",
+    "acceptAll": "Accept toate",
+    "close": "Închide",
+    "settings": "Setări cookie",
+    "videoTitle": "Video găzduit pe YouTube",
+    "videoText": "Pentru a-l viziona, acceptă cookie-urile pentru conținut extern — YouTube poate seta propriile cookie-uri.",
+    "videoAccept": "Acceptă și redă"
+  },
+  "legal": {
+    "privacy": "Politica de confidențialitate",
+    "cookies": "Politica de cookie-uri",
+    "updated": "Ultima actualizare: {date}",
+    "back": "Înapoi la pagina principală"
   }
 }

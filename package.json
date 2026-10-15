@@ -18,7 +18,8 @@
     "seed": "cross-env NODE_OPTIONS=--no-deprecation payload run src/endpoints/seed/run.ts",
     "vercel-build": "cross-env NODE_OPTIONS=--no-deprecation payload migrate && pnpm build",
     "migrate": "cross-env NODE_OPTIONS=--no-deprecation payload migrate",
-    "migrate:create": "cross-env NODE_OPTIONS=--no-deprecation payload migrate:create"
+    "migrate:create": "cross-env NODE_OPTIONS=--no-deprecation payload migrate:create",
+    "seed:legal": "cross-env NODE_OPTIONS=--no-deprecation payload run src/endpoints/seed/runLegal.ts"
   },
   "dependencies": {
     "@fontsource/allura": "^5.3.0",
