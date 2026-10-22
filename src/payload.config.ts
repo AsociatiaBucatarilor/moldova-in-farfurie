@@ -66,8 +66,10 @@ export default buildConfig({
         },
       },
       token: process.env.BLOB_READ_WRITE_TOKEN,
-      // Upload from the browser to bypass the 4.5 MB serverless request limit
-      clientUploads: process.env.BLOB_CLIENT_UPLOADS !== "false",
+      // Uploads go through the server. Browser (client) uploads would avoid Vercel's 4.5 MB request
+      // limit, but in this plugin version they break files whose name already exists in Media:
+      // the document is renamed to "name-1" while the blob keeps the original key, so the link 404s.
+      clientUploads: false,
     }),
   ],
   localization,

@@ -17,6 +17,9 @@ export const Media: CollectionConfig = {
     read: anyone,
     update: authenticated,
   },
+  admin: {
+    description: 'Imaginile se încarcă prin server: maximum 4 MB per fișier. Comprimați fotografiile mari înainte.',
+  },
   fields: [
     {
       name: 'alt',
