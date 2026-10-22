@@ -3,6 +3,7 @@ import type { GlobalConfig } from 'payload'
 import { anyone } from '../access/anyone'
 import { authenticated } from '../access/authenticated'
 import { revalidateLandingGlobal } from '../hooks/revalidateLanding'
+import { normalizeUrl, validateUrl } from '../utilities/url'
 import { validateYouTubeUrl } from '../utilities/youtube'
 
 const multiline = 'Fiecare rând nou apare pe un rând separat pe site.'
@@ -145,7 +146,17 @@ export const Landing: GlobalConfig = {
                   type: 'row',
                   fields: [
                     { name: 'name', label: 'Nume', type: 'text', required: true },
-                    { name: 'url', label: 'Link', type: 'text' },
+                    {
+                      name: 'url',
+                      label: 'Link către site-ul partenerului',
+                      type: 'text',
+                      admin: {
+                        placeholder: 'https://exemplu.md',
+                        description: 'Opțional. Click pe logo deschide site-ul într-un tab nou.',
+                      },
+                      hooks: { beforeValidate: [({ value }) => normalizeUrl(value)] },
+                      validate: validateUrl,
+                    },
                   ],
                 },
                 { name: 'logo', label: 'Logo', type: 'upload', relationTo: 'media', required: true },
