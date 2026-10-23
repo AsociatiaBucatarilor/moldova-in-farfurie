@@ -591,6 +591,20 @@ export interface Landing {
         }[]
       | null;
   };
+  seo?: {
+    /**
+     * Ideal 50–60 de caractere. Gol = „Moldova în Farfurie · by Chef’s Forum” tradus.
+     */
+    title?: string | null;
+    /**
+     * Textul de sub titlu în Google. Ideal 140–160 de caractere. Gol = descrierea din Hero.
+     */
+    description?: string | null;
+    /**
+     * Apare la distribuirea pe Facebook, Telegram, Viber etc. Ideal 1200×630 px. Gol = imaginea din Hero.
+     */
+    image?: (number | null) | Media;
+  };
   footer?: {
     phone?: string | null;
     email?: string | null;
@@ -715,6 +729,13 @@ export interface LandingSelect<T extends boolean = true> {
               logo?: T;
               id?: T;
             };
+      };
+  seo?:
+    | T
+    | {
+        title?: T;
+        description?: T;
+        image?: T;
       };
   footer?:
     | T

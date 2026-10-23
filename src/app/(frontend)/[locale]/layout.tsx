@@ -52,9 +52,11 @@ export default async function RootLayout({ children, params }: Args) {
 
 export const metadata: Metadata = {
   metadataBase: new URL(getServerUrl()),
-  title: 'Moldova în Farfurie · by Chef’s Forum',
-  description:
-    'Un proiect care aduce împreună gastronomia locală, turismul și oamenii care păstrează autenticitatea Moldovei.',
+  // Sub-pages read "Politica de cookie-uri · Moldova în Farfurie"
+  title: { default: 'Moldova în Farfurie', template: '%s · Moldova în Farfurie' },
+  applicationName: 'Moldova în Farfurie',
+  // Preview deployments must not be indexed; production follows robots.txt
+  robots: process.env.VERCEL_ENV && process.env.VERCEL_ENV !== 'production' ? { index: false, follow: false } : undefined,
 }
 
 export function generateStaticParams() {

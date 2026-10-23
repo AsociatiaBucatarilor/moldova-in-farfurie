@@ -74,5 +74,11 @@
     "cookies": "Cookie Policy",
     "updated": "Last updated: {date}",
     "back": "Back to the home page"
+  },
+  "seo": {
+    "siteName": "Moldova în Farfurie",
+    "title": "Moldova în Farfurie — the map of Moldovan flavours",
+    "privacyDescription": "How Moldova în Farfurie processes personal data and what your rights are under Law no. 133/2011.",
+    "cookiesDescription": "Which cookies the Moldova în Farfurie website uses and how to manage your choices."
   }
 }

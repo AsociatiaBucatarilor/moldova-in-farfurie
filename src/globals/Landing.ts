@@ -165,6 +165,44 @@ export const Landing: GlobalConfig = {
           ],
         },
         {
+          name: 'seo',
+          label: 'SEO',
+          description:
+            'Cum apare site-ul în Google și la distribuirea pe rețele sociale. Completați pentru fiecare limbă (selectorul „Locale” din dreapta sus).',
+          fields: [
+            {
+              name: 'title',
+              label: 'Titlu (Google și share)',
+              type: 'text',
+              localized: true,
+              maxLength: 70,
+              admin: {
+                description: 'Ideal 50–60 de caractere. Gol = „Moldova în Farfurie · by Chef’s Forum” tradus.',
+              },
+            },
+            {
+              name: 'description',
+              label: 'Descriere',
+              type: 'textarea',
+              localized: true,
+              maxLength: 200,
+              admin: {
+                description: 'Textul de sub titlu în Google. Ideal 140–160 de caractere. Gol = descrierea din Hero.',
+              },
+            },
+            {
+              name: 'image',
+              label: 'Imagine de share',
+              type: 'upload',
+              relationTo: 'media',
+              admin: {
+                description:
+                  'Apare la distribuirea pe Facebook, Telegram, Viber etc. Ideal 1200×630 px. Gol = imaginea din Hero.',
+              },
+            },
+          ],
+        },
+        {
           name: 'footer',
           label: 'Footer',
           fields: [

@@ -74,5 +74,11 @@
     "cookies": "Politica de cookie-uri",
     "updated": "Ultima actualizare: {date}",
     "back": "Înapoi la pagina principală"
+  },
+  "seo": {
+    "siteName": "Moldova în Farfurie",
+    "title": "Moldova în Farfurie — harta gusturilor Moldovei",
+    "privacyDescription": "Cum prelucrează Moldova în Farfurie datele cu caracter personal și ce drepturi aveți, conform Legii nr. 133/2011.",
+    "cookiesDescription": "Ce cookie-uri folosește site-ul Moldova în Farfurie și cum vă puteți gestiona opțiunile."
   }
 }

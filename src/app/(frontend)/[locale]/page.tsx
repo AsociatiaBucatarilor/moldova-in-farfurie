@@ -1,6 +1,6 @@
 import configPromise from '@payload-config'
 import type { Metadata } from 'next'
-import { setRequestLocale } from 'next-intl/server'
+import { getTranslations, setRequestLocale } from 'next-intl/server'
 import { getPayload, type TypedLocale } from 'payload'
 import React, { cache } from 'react'
 
@@ -10,8 +10,10 @@ import { ModalProvider } from '@/components/landing/ModalProvider'
 import { Partners } from '@/components/landing/Partners'
 import { Quote } from '@/components/landing/Quote'
 import { SiteFooter } from '@/components/landing/SiteFooter'
-import { toRaionView } from '@/components/landing/toView'
+import { StructuredData } from '@/components/landing/StructuredData'
+import { toImage, toRaionView } from '@/components/landing/toView'
 import { getLanding } from '@/utilities/getContent'
+import { alternatesFor, localizedPath, ogLocales } from '@/utilities/seo'
 import { getYouTubeId } from '@/utilities/youtube'
 
 type Args = {
@@ -46,6 +48,7 @@ export default async function Page({ params }: Args) {
 
   return (
     <ModalProvider raioane={raioane} trailerId={getYouTubeId(landing.hero?.trailerUrl)}>
+      <StructuredData locale={locale} landing={landing} raioane={raioane} />
       <main className="landing">
         <Hero hero={landing.hero} />
         <Explorer
@@ -65,16 +68,30 @@ export default async function Page({ params }: Args) {
 export async function generateMetadata({ params }: Args): Promise<Metadata> {
   const { locale } = await params
   const { landing } = await getContent(locale)
-  const description = landing.hero?.description || undefined
-  const image = landing.hero?.background
+  const t = await getTranslations({ locale, namespace: 'seo' })
+
+  const title = landing.seo?.title || t('title')
+  const description = landing.seo?.description || landing.hero?.description || undefined
+  // Prefer the dedicated share image, then the hero photo; the "hero" size is 2000px wide
+  const image = toImage(landing.seo?.image, 'hero') ?? toImage(landing.hero?.background, 'hero')
+  const images = image
+    ? [{ url: image.url, width: image.width, height: image.height, alt: image.alt || title }]
+    : undefined
 
   return {
-    title: 'Moldova în Farfurie · by Chef’s Forum',
+    // `absolute` skips the layout's title template on the home page
+    title: { absolute: title },
     description,
+    alternates: alternatesFor(locale, '/'),
     openGraph: {
-      title: 'Moldova în Farfurie',
+      type: 'website',
+      siteName: t('siteName'),
+      title,
       description,
-      images: typeof image === 'object' && image?.url ? [image.url] : undefined,
+      url: localizedPath(locale, '/'),
+      images,
+      ...ogLocales(locale),
     },
+    twitter: { card: 'summary_large_image', title, description, images: images?.map((i) => i.url) },
   }
 }

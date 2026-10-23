@@ -74,5 +74,11 @@
     "cookies": "Политика использования cookie",
     "updated": "Последнее обновление: {date}",
     "back": "Вернуться на главную"
+  },
+  "seo": {
+    "siteName": "Moldova în Farfurie",
+    "title": "Moldova în Farfurie — карта вкусов Молдовы",
+    "privacyDescription": "Как Moldova în Farfurie обрабатывает персональные данные и какие у вас есть права согласно Закону № 133/2011.",
+    "cookiesDescription": "Какие cookie использует сайт Moldova în Farfurie и как управлять своим выбором."
   }
 }

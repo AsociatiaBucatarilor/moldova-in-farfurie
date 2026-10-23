@@ -1,10 +1,12 @@
 import { RichText } from '@payloadcms/richtext-lexical/react'
+import type { Metadata } from 'next'
 import { getTranslations } from 'next-intl/server'
 import type { TypedLocale } from 'payload'
 import React from 'react'
 
 import { Link } from '@/i18n/routing'
 import { getLanding, getLegal } from '@/utilities/getContent'
+import { alternatesFor, localizedPath, ogLocales } from '@/utilities/seo'
 import { getYouTubeId } from '@/utilities/youtube'
 
 import { ModalProvider } from './ModalProvider'
@@ -14,6 +16,35 @@ import { SiteHeader } from './SiteHeader'
 export type PolicyKey = 'privacy' | 'cookies'
 
 export const getPolicy = async (locale: TypedLocale, key: PolicyKey) => (await getLegal(locale))[key]
+
+const POLICY_PATHS: Record<PolicyKey, string> = {
+  privacy: '/politica-de-confidentialitate',
+  cookies: '/politica-cookie',
+}
+
+export const legalMetadata = async (locale: TypedLocale, policy: PolicyKey): Promise<Metadata> => {
+  const [content, t, tLegal] = await Promise.all([
+    getPolicy(locale, policy),
+    getTranslations({ locale, namespace: 'seo' }),
+    getTranslations({ locale, namespace: 'legal' }),
+  ])
+  const title = content?.title || tLegal(policy)
+  const description = t(policy === 'privacy' ? 'privacyDescription' : 'cookiesDescription')
+
+  return {
+    title,
+    description,
+    alternates: alternatesFor(locale, POLICY_PATHS[policy]),
+    openGraph: {
+      type: 'website',
+      siteName: t('siteName'),
+      title,
+      description,
+      url: localizedPath(locale, POLICY_PATHS[policy]),
+      ...ogLocales(locale),
+    },
+  }
+}
 
 export const LegalPage = async ({ locale, policy }: { locale: TypedLocale; policy: PolicyKey }) => {
   const [landing, content] = await Promise.all([getLanding(locale), getPolicy(locale, policy)])
