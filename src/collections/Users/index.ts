@@ -15,7 +15,12 @@ const Users: CollectionConfig = {
     defaultColumns: ['name', 'email'],
     useAsTitle: 'name',
   },
-  auth: true,
+  auth: {
+    // Brute-force protection: after 10 wrong passwords in a row the account is locked for
+    // 5 minutes. The counter resets on a successful login and when the lock expires.
+    maxLoginAttempts: 10,
+    lockTime: 5 * 60 * 1000,
+  },
   fields: [
     {
       name: 'name',

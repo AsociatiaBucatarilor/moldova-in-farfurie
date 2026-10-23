@@ -12,6 +12,21 @@ pnpm seed          # încarcă conținutul din design (32 de raioane, imagini, t
 pnpm seed:legal    # completează doar politicile legale și titlul partenerilor (sigur pe producție)
 ```
 
+## Conturi de administrator
+
+Comenzile întreabă datele în terminal (parola se afișează ca `*` și nu se salvează nicăieri).
+Lucrează pe baza din `DATABASE_URL`; pentru producție, în PowerShell:
+
+```bash
+$env:DATABASE_URL="<DATABASE_URL Neon din Vercel>"; $env:NODE_ENV="production"; pnpm create-user
+```
+
+- `pnpm create-user` — creează un cont nou (nume, email, parolă);
+- `pnpm reset-password` — setează o parolă nouă unui cont existent și îl deblochează.
+
+După 10 parole greșite la rând contul se blochează 5 minute; numărătoarea se resetează la
+autentificarea reușită și când expiră blocarea.
+
 ## Migrații (producție)
 
 Local, schema bazei se actualizează automat. Pentru producție, după orice schimbare de câmpuri:

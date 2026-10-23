@@ -210,6 +210,8 @@ export interface Raioane {
   createdAt: string;
 }
 /**
+ * Imaginile se încarcă prin server: maximum 4 MB per fișier. Comprimați fotografiile mari înainte.
+ *
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "media".
  */
@@ -580,6 +582,9 @@ export interface Landing {
     items?:
       | {
           name: string;
+          /**
+           * Opțional. Click pe logo deschide site-ul într-un tab nou.
+           */
           url?: string | null;
           logo: number | Media;
           id?: string | null;
